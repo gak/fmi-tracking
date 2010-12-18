@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import json
+
+from db import *
+
+class Dump:
+
+    def __init__(self):
+        self.config = json.load(open('config.json'))
+
+    def header(self):
+        print 'name,ts,longitude,latitude'
+
+    def dump_all(self):
+        for device in Device.query.all():
+            self.dump_device(device)
+
+    def dump_device(self, device):
+        for sample in Sample.query.filter_by(device=device):
+            print '%s,%i,%f,%f' % (
+                device.name,
+                sample.ts,
+                sample.long,
+                sample.lat,
+                )
+
+def main():
+    d = Dump()
+    d.header()
+    d.dump_all()
+
+if __name__ == '__main__':
+    main()
+
+

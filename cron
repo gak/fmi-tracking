@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os
 import json
 import time
+from datetime import *
 
 ROOT = os.path.abspath(os.path.dirname(__file__))
 os.chdir(ROOT)
@@ -27,7 +29,12 @@ class Cron:
         latest = self.fmi.devices()
 
         for device in latest['content']:
+
             if not device['location']:
+                continue
+
+            if device['isLocating']:
+                print device, 'still locating'
                 continue
 
             self.process_device(device)
@@ -35,14 +42,14 @@ class Cron:
         session.commit()
 
     def process_device(self, device_info):
+        print device_info
         name = device_info['name']
         long = device_info['location']['longitude']
         lat = device_info['location']['latitude']
-        device = Device.get_by_name(name)
+        ts = int(device_info['location']['timeStamp'] / 1000)
         
-        sample = Sample(device=device, ts=int(time.time()),
-            long=long, lat=lat)
-
+        device = Device.get_by_name(name)
+        sample = Sample(device=device, ts=ts, long=long, lat=lat)
 
     def update(self):
         

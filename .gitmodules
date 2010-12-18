@@ -1,0 +1,3 @@
+[submodule "fmi"]
+	path = fmi
+	url = git@github.com:gak/fmi.git
