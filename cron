@@ -1,14 +1,24 @@
 #!/usr/bin/env python
 
+import os
 import json
+import time
+
+ROOT = os.path.abspath(os.path.dirname(__file__))
+os.chdir(ROOT)
 
 from fmi import FMI
+from db import *
+
 
 class Cron:
 
     def __init__(self):
         self.config = json.load(open('config.json'))
-        self.fmi = FMI(self.config['username'], self.config['password'])
+        self.fmi = FMI(
+            self.config['me']['username'],
+            self.config['me']['password'],
+            )
 
     def fetch(self):
         self.fmi.login()
@@ -19,16 +29,31 @@ class Cron:
         for device in latest['content']:
             if not device['location']:
                 continue
-            print device['name'],
-            print device['location']['longitude'],
-            print device['location']['latitude']
+
+            self.process_device(device)
+        
+        session.commit()
+
+    def process_device(self, device_info):
+        name = device_info['name']
+        long = device_info['location']['longitude']
+        lat = device_info['location']['latitude']
+        device = Device.get_by_name(name)
+        
+        sample = Sample(device=device, ts=int(time.time()),
+            long=long, lat=lat)
+
+
+    def update(self):
         
         # send updates
         for device in self.config['devices']:
             self.fmi.devices(locate=device)
 
 def main():
-    Cron().fetch()
+    c = Cron()
+    c.fetch()
+    c.update()
 
 if __name__ == '__main__':
     main()
