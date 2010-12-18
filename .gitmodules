@@ -1,3 +1,6 @@
 [submodule "fmi"]
 	path = fmi
 	url = git@github.com:gak/fmi.git
+[submodule "lib/fmi"]
+	path = lib/fmi
+	url = git@github.com:gak/fmi.git
