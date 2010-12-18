@@ -24,8 +24,6 @@ class Cron:
 
     def fetch(self):
         self.fmi.login()
-            
-        # fetch last positions
         latest = self.fmi.devices()
 
         for device in latest['content']:
@@ -42,7 +40,6 @@ class Cron:
         session.commit()
 
     def process_device(self, device_info):
-        print device_info
         name = device_info['name']
         long = device_info['location']['longitude']
         lat = device_info['location']['latitude']
