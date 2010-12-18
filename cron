@@ -34,7 +34,7 @@ class Cron:
                 continue
 
             if device['isLocating']:
-                print device, 'still locating'
+                print device['name'], 'still locating'
                 continue
 
             self.process_device(device)
