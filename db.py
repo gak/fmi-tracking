@@ -7,7 +7,6 @@ metadata.bind.echo = False
 cleanup_all()
 
 
-
 def get_or_create(cls, if_new_set={}, **params):
     """Call get_by; if no object is returned, initialize an
     object with the same parameters.  If a new object was
@@ -20,6 +19,7 @@ def get_or_create(cls, if_new_set={}, **params):
     return result
 
 Entity.get_or_create = classmethod(get_or_create)
+
 
 class Device(Entity):
 
@@ -42,7 +42,8 @@ class Sample(Entity):
     lat = Field(Float, index=True)
     
     def __repr__(self):
-        return u'<%s sample %f %f>' % (self.self.title, self.year)
+        return ('<%s sample %f %f>' % (self.device, self.long,
+            self.lat)).encode('utf8')
 
 
 setup_all(True)

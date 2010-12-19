@@ -32,7 +32,7 @@ class Cron:
                 continue
 
             if device['isLocating']:
-                print device['name'], 'still locating'
+                print device['name'].encode('utf8'), 'still locating...'
                 continue
 
             self.process_device(device)
